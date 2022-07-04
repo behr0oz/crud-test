@@ -1,5 +1,6 @@
 using Customer.Application;
 using Customer.Infrastructure;
+using Customer.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,8 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 
 
 var app = builder.Build();
+
+Customer.Api.Extensions.HostExtensions.MigrateDatabase<CustomerContext>(app.Services, (context, services) => { }, 50);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

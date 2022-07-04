@@ -1,4 +1,5 @@
-﻿using Customer.Application.Contracts.Persistence;
+﻿using Customer.Application.Contracts.Infrastructure;
+using Customer.Application.Contracts.Persistence;
 using Customer.Infrastructure.Persistence;
 using Customer.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace Customer.Infrastructure
             services.AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>));
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped(sp => new HttpClient());
+            services.AddScoped<ICustomValidator, CustomValidator>();
 
             return services;
         }

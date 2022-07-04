@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Customer.Domain.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Customer.Domain.Entities
 {
-    public class CustomerModel
+    public class CustomerModel : BaseEntity
     {
         [Column(TypeName = "varchar(100)")]
         public string Firstname { get; set; }

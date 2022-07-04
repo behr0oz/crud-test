@@ -1,0 +1,109 @@
+﻿@page "/customer/create"
+@page "/customer/edit/{Id:int}"
+@using System.Text
+@using System.Text.Json
+@inject HttpClient Http
+@inject NavigationManager Nav
+@inject IJSRuntime JsRuntime
+
+<h3>Customer Create/Edit</h3>
+
+<EditForm Model="customerModel" OnValidSubmit="HandleUpdate">
+    <DataAnnotationsValidator />
+    @*<ValidationSummary />*@
+    <div class="form-group">
+        <label>Firstname</label>
+        <InputText @bind-Value="customerModel.Firstname" class="form-control"></InputText>
+        <ValidationMessage For="()=>customerModel.Firstname"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label>Lastname</label>
+        <InputText @bind-Value="customerModel.Lastname" class="form-control"></InputText>
+        <ValidationMessage For="()=>customerModel.Lastname"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label>Date Of Birth</label>
+        <InputDate @bind-Value="customerModel.DateOfBirth" class="form-control"></InputDate>
+        <ValidationMessage For="()=>customerModel.DateOfBirth"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label>Phone number</label>
+        <InputText @bind-Value="customerModel.PhoneNumber" class="form-control"></InputText>
+        <ValidationMessage For="()=>customerModel.PhoneNumber"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label>Email</label>
+        <InputText @bind-Value="customerModel.Email" class="form-control"></InputText>
+        <ValidationMessage For="()=>customerModel.Email"></ValidationMessage>
+    </div>
+    <div class="form-group">
+        <label>Bank Account Number</label>
+        <InputText @bind-Value="customerModel.BankAccountNumber" class="form-control"></InputText>
+        <ValidationMessage For="()=>customerModel.BankAccountNumber"></ValidationMessage>
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary">Save</button>
+        <NavLink href="/" class="btn btn-secondary">Back</NavLink>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    private Customer customerModel { get; set; } = new Customer();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id != null)
+        {
+            customerModel = await Http.GetFromJsonAsync<Customer>($"https://127.0.0.1:5000/customer/{@Id}");
+        }
+    }
+
+    private async Task HandleUpdate()
+    {
+        try
+        {
+            var serializedString = JsonSerializer.Serialize(customerModel);
+            var requestContent = new StringContent(serializedString, Encoding.UTF8, "application/json");
+            if (Id == null)
+            {
+                var customerResult = await Http.PostAsync($"https://127.0.0.1:5000/customer", requestContent);
+                if (customerResult.IsSuccessStatusCode)
+                {
+                    await JsRuntime.ToastrSuccess("Customer created successfuly");
+                    Nav.NavigateTo("/");
+                }
+                else
+                {
+                    var response = await customerResult.Content.ReadAsStringAsync();
+                    var errorDic = JsonSerializer.Deserialize<Dictionary<string, string[]>>(response);
+                    var error = ValidationError.DicToString(errorDic);
+                    await JsRuntime.ToastrError(error);
+                }
+            }
+            else
+            {
+                var customerResult = await Http.PutAsync($"https://127.0.0.1:5000/customer", requestContent);
+                if (customerResult.IsSuccessStatusCode)
+                {
+                    await JsRuntime.ToastrSuccess("Customer updated successfuly");
+                    Nav.NavigateTo("/");
+                }
+                else
+                {
+                    var response = await customerResult.Content.ReadAsStringAsync();
+                    var errorDic = JsonSerializer.Deserialize<Dictionary<string, string[]>>(response);
+                    var error = ValidationError.DicToString(errorDic);
+                    await JsRuntime.ToastrError(error);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            await JsRuntime.ToastrError("There is an error, check the input values");
+        }
+    }
+
+}

@@ -1,9 +1,98 @@
 ﻿@page "/"
+@inject HttpClient Http
+@inject IJSRuntime JsRuntime
+@inject NavigationManager Nav
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Hello!</h1>
 
-Welcome to your new app.
+@if (customers == null && ErrorMessage == String.Empty)
+{
+    <p><em>Loading...</em></p>
+}
+else if (ErrorMessage != String.Empty)
+{
+    <p><em>@ErrorMessage</em></p>
+}
+else
+{
+    <p> List of Customers: </p>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <NavLink href="customer/create" class="btn btn-info">Add New Customer</NavLink>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Date of Birth</th>
+                <th>Phonenumber</th>
+                <th>Email</th>
+                <th>Bank Account</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.Id</td>
+                    <td>@customer.Firstname</td>
+                    <td>@customer.Lastname</td>
+                    <td>@customer.DateOfBirth.ToShortDateString()</td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.BankAccountNumber</td>
+                    <td>
+                        <NavLink href="@($"/customer/edit/{customer.Id}")" class="btn btn-primary">Edit</NavLink>
+                        <button class="btn btn-danger" @onclick="()=>HandleDelete(customer.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<DeleteConfirmation ConfirmationChanged="ConfirmDelete_Click"></DeleteConfirmation>
+
+@code {
+    private Customer[]? customers;
+    private int? DeleteCustomerId { get; set; }
+    private string ErrorMessage = String.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            customers = await Http.GetFromJsonAsync<Customer[]>("https://127.0.0.1:5000/customer");
+        }
+        catch (Exception e)
+        {
+            ErrorMessage = "Server is not running.. Please reload this page after the server has been started";
+        }
+    }
+
+    private async Task HandleDelete(int customerId)
+    {
+        DeleteCustomerId = customerId;
+        await JsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+    }
+
+    public async Task ConfirmDelete_Click(bool isConfirmed)
+    {
+        if (isConfirmed && DeleteCustomerId != null)
+        {
+            var customerId = DeleteCustomerId;
+            DeleteCustomerId = null;
+
+            var result = await Http.DeleteAsync($"https://127.0.0.1:5000/customer/{customerId}");
+
+            await JsRuntime.ToastrSuccess("Customer Deleted successfully");
+            Nav.NavigateTo("/");
+        }
+        await JsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+    }
+}
+

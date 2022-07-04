@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Customer.Api", "Services\Cu
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6B29D25E-FA2E-46B9-819C-48736159351E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Front", "Front", "{3C2E8461-CC99-4DFC-A6DB-0715E75D491E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWeb", "Front\BlazorWeb\BlazorWeb.csproj", "{0B64482C-C2DD-4ECF-8A5F-9CEE61D15057}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +53,10 @@ Global
 		{6B29D25E-FA2E-46B9-819C-48736159351E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B29D25E-FA2E-46B9-819C-48736159351E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B29D25E-FA2E-46B9-819C-48736159351E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B64482C-C2DD-4ECF-8A5F-9CEE61D15057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B64482C-C2DD-4ECF-8A5F-9CEE61D15057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B64482C-C2DD-4ECF-8A5F-9CEE61D15057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B64482C-C2DD-4ECF-8A5F-9CEE61D15057}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,6 +67,7 @@ Global
 		{22E0F1F3-D936-467F-8DCE-828441F682A7} = {9B293058-0CDF-49AA-91DE-B4BB1B8A347D}
 		{0F23848B-E4AC-4DF8-B7EB-08EF595979C3} = {9B293058-0CDF-49AA-91DE-B4BB1B8A347D}
 		{E2A7F2FB-5339-4D83-A51F-B270EE02FFD5} = {9B293058-0CDF-49AA-91DE-B4BB1B8A347D}
+		{0B64482C-C2DD-4ECF-8A5F-9CEE61D15057} = {3C2E8461-CC99-4DFC-A6DB-0715E75D491E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4B5A26C9-68C1-49D9-9F32-AF907A1730C2}

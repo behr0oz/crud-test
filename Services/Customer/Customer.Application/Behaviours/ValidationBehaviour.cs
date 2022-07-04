@@ -28,7 +28,7 @@ namespace Customer.Application.Behaviours
 
                 if (failures.Count != 0)
                 {
-                    throw new ValidationException(failures);
+                    throw new Customer.Application.Exceptions.ValidationException(failures);
                 }
             }
 

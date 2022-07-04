@@ -57,7 +57,7 @@
     {
         if (Id != null)
         {
-            customerModel = await Http.GetFromJsonAsync<Customer>($"https://127.0.0.1:5000/customer/{@Id}");
+            customerModel = await Http.GetFromJsonAsync<Customer>($"http://127.0.0.1:5001/customer/{@Id}");
         }
     }
 
@@ -69,7 +69,7 @@
             var requestContent = new StringContent(serializedString, Encoding.UTF8, "application/json");
             if (Id == null)
             {
-                var customerResult = await Http.PostAsync($"https://127.0.0.1:5000/customer", requestContent);
+                var customerResult = await Http.PostAsync($"http://127.0.0.1:5001/customer", requestContent);
                 if (customerResult.IsSuccessStatusCode)
                 {
                     await JsRuntime.ToastrSuccess("Customer created successfuly");
@@ -85,7 +85,7 @@
             }
             else
             {
-                var customerResult = await Http.PutAsync($"https://127.0.0.1:5000/customer", requestContent);
+                var customerResult = await Http.PutAsync($"http://127.0.0.1:5001/customer", requestContent);
                 if (customerResult.IsSuccessStatusCode)
                 {
                     await JsRuntime.ToastrSuccess("Customer updated successfuly");

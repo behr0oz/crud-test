@@ -66,7 +66,7 @@ else
     {
         try
         {
-            customers = await Http.GetFromJsonAsync<Customer[]>("https://127.0.0.1:5000/customer");
+            customers = await Http.GetFromJsonAsync<Customer[]>("http://127.0.0.1:5001/customer");
         }
         catch (Exception e)
         {
@@ -87,7 +87,7 @@ else
             var customerId = DeleteCustomerId;
             DeleteCustomerId = null;
 
-            var result = await Http.DeleteAsync($"https://127.0.0.1:5000/customer/{customerId}");
+            var result = await Http.DeleteAsync($"http://127.0.0.1:5001/customer/{customerId}");
 
             await JsRuntime.ToastrSuccess("Customer Deleted successfully");
             Nav.NavigateTo("/");

@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  customer.api:
+    depends_on: 
+      - sql-server-db
+    image: ${DOCKER_REGISTRY-}customerapi
+    build:
+      context: .
+      dockerfile: Services/Customer/Customer.Api/Dockerfile
+    networks: 
+      - backend
+
+  sql-server-db:
+    container_name: sql-server-db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    user: root
+    environment:
+      MSSQL_SA_PASSWORD: Rad@123!324BaAcz
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
+    ports:
+      - "1435:1433"
+    volumes:
+      - database_data:/var/opt/mssql
+    networks: 
+      - backend
+
+networks: 
+  backend:
+
+volumes:
+  database_data:
+    driver: local

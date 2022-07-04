@@ -1,4 +1,8 @@
 using Customer.Application;
+using Customer.Application.Exceptions;
+using Customer.Application.Features.Customers.Commands.AddCustomer;
+using Customer.Application.Features.Customers.Commands.DeleteCustomer;
+using Customer.Application.Features.Customers.Commands.UpdateCustomer;
 using Customer.Infrastructure;
 using Customer.Infrastructure.Persistence;
 using MediatR;
@@ -39,6 +43,39 @@ app.MapGet("/customer/{id}", async (int id, [FromServices] IMediator _mediator) 
 {
     var query = new Customer.Application.Features.Customers.Queries.GetCustomerById.GetCustomerByIdQuery(id);
     return await _mediator.Send(query);
+});
+
+app.MapPost("/customer", async (AddCustomerCommand customer, [FromServices] IMediator _mediator) =>
+{
+    try
+    {
+        var result = await _mediator.Send(customer);
+        return Results.Ok(result);
+    }
+    catch (ValidationException ex)
+    {
+        return Results.BadRequest(ex.Errors);
+    }
+});
+
+app.MapPut("/customer", async (UpdateCustomerCommand customer, [FromServices] IMediator _mediator) =>
+{
+    try
+    {
+        var result = await _mediator.Send(customer);
+        return Results.Ok(result);
+    }
+    catch (ValidationException ex)
+    {
+        return Results.BadRequest(ex.Errors);
+    }
+
+});
+
+app.MapDelete("/customer/{id}", async (int id, [FromServices] IMediator _mediator) =>
+{
+    await _mediator.Send(new DeleteCustomerCommand() { Id = id });
+    return Results.Ok();
 });
 
 app.Run();
